@@ -91,3 +91,16 @@ class ResponsePost(PostBase):
     owner: UserResponse
 
 # endregion
+
+# region Vote
+
+
+class Vote(BaseModel):
+    post_id: int
+    # dir: conint(le=1)
+    # dir: 1 means vote, 0 unvote
+    # don't like it, would rather prefer if record exists on table delete it as an unvote
+    # FIXED: implement unvote trying to add the vote twice by the same user and the same post
+
+
+# endregion
