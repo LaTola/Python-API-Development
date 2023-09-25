@@ -21,11 +21,9 @@ async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_u
     Example: {{URL}}/posts?limit=10&skip=0&search=<text>
     """
     # URL example: {{URL}}/posts?limit=10&skip=0&search=<text>
-    # posts = db.query(models.Post).filter(func.lower(models.Post.title).contains(
-    #                 func.lower(search))).limit(limit).offset(skip).all()
     results = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
-        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).all()
-    print(results)
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
+        models.Post.id).filter(func.lower(models.Post.title).contains(func.lower(search))).limit(limit).offset(skip).all()
 
     return results
 
