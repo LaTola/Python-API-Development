@@ -20,10 +20,10 @@ async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_u
 
     Example: {{URL}}/posts?limit=10&skip=0&search=<text>
     """
-    # URL example: {{URL}}/posts?limit=10&skip=0&search=<text>
     results = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
-        models.Post.id).filter(func.lower(models.Post.title).contains(func.lower(search))).limit(limit).offset(skip).all()
+        models.Post.id).filter(func.lower(models.Post.title).contains(
+        func.lower(search))).limit(limit).offset(skip).all()
 
     return results
 
@@ -44,9 +44,6 @@ async def get_post(id: int, db: Session = Depends(get_db), user=Depends(oauth2.g
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f'id {id} not found')
 
-    # if post.author_id != user.id:
-    #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-    #                         detail="Not authorized to perform requested action")
     return post
 
 
@@ -65,9 +62,6 @@ async def get_latest(db: Session = Depends(get_db), user=Depends(oauth2.get_curr
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f'no records found')
 
-    # if post.author_id != user.id:
-    #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-    #                         detail="User does not own latest record")
     return post
 
 # endregion
