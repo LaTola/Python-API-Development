@@ -90,6 +90,11 @@ class ResponsePost(PostBase):
     author_id: int
     owner: UserResponse
 
+
+class PostOut(BaseModel):
+    Post: ResponsePost
+    likes: int
+
 # endregion
 
 # region Vote
