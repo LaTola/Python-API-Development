@@ -11,7 +11,7 @@ router = APIRouter(prefix="/posts", tags=['Posts'])
 
 
 @router.get("/", response_model=List[schemas.PostOut])
-async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_user), limit: int = 50, skip: int = 0, search: Optional[str] = ""):
     """
     API posts route
 
@@ -20,15 +20,15 @@ async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_u
 
     Example: {{URL}}/posts?limit=10&skip=0&search=<text>
     """
-    results = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+    posts = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
-        models.Post.id).filter(func.lower(models.Post.title).contains(
-        func.lower(search))).limit(limit).offset(skip).all()
+        models.Post.id).order_by(models.Post.id).filter(func.lower(models.Post.title).contains(
+            func.lower(search))).limit(limit).offset(skip).all()
 
-    return results
+    return posts
 
 
-@router.get("/{id}", response_model=schemas.ResponsePost)
+@router.get("/{id}", response_model=schemas.PostOut)
 async def get_post(id: int, db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     Get's an item by id
@@ -39,7 +39,9 @@ async def get_post(id: int, db: Session = Depends(get_db), user=Depends(oauth2.g
     Returns:
         str: the id of the Item (primary key)
     """
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
+        models.Post.id).filter(models.Post.id == id).first()
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f'id {id} not found')
@@ -47,7 +49,7 @@ async def get_post(id: int, db: Session = Depends(get_db), user=Depends(oauth2.g
     return post
 
 
-@router.get("/latest/", response_model=schemas.ResponsePost)
+@router.get("/latest/", response_model=schemas.PostOut)
 async def get_latest(db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     Returns last item added
@@ -57,10 +59,12 @@ async def get_latest(db: Session = Depends(get_db), user=Depends(oauth2.get_curr
 
     Comments: Added slash at the end to avoid route conflict with get_post
     """
-    post = db.query(models.Post).order_by(models.Post.id.desc()).first()
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
+        models.Post.id).order_by(models.Post.id.desc()).first()
     if not post:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f'no records found')
+            status_code=status.HTTP_404_NOT_FOUND, detail=f'No records found')
 
     return post
 
