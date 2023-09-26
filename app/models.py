@@ -9,8 +9,8 @@ class Post(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
-    published = Column(Boolean, server_default='true')
-    author_id = Column(Integer, ForeignKey(
+    published = Column(Boolean, nullable=False, server_default='true')
+    owner_id = Column(Integer, ForeignKey(
         "users.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, server_default=text('now()'))
@@ -24,6 +24,7 @@ class User(Base):
     password = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True),
                         nullable=False, server_default=text('now()'))
+    phone_number=Column(String)
 
 
 class Vote(Base):
