@@ -1,4 +1,5 @@
-#### El curso de este proyecto esta en 
+
+#### Project step by step course 
 [Python API Development - Comprehensive Course for Begginners](https://www.youtube.com/watch?v=0sOvCWFmrtA)
 
 #### API docs URL
@@ -16,10 +17,10 @@ https://fastapi.tiangolo.com/es/
 #### SQLAlchemy
 https://docs.sqlalchemy.org/en/20/
 
-#### Para ejecutar la api:
+#### API server run:
 <pre><code># uvicorn app.main:app --reload</code></pre>
 
-### C.R.U.D.
+#### C.R.U.D.
 
  - **C** reate     
 <pre>     POST        /post       @app.post("/post")</pre>
@@ -31,5 +32,10 @@ https://docs.sqlalchemy.org/en/20/
 - **D** elete
 <pre>     DELETE      /post/:id   @app.delete("/post/{id}")</pre>
 
-#### Postman API Tests URL
-https://wilbert-team.postman.co/workspace/99c3b46f-a051-422e-91d8-0c9736d0cf74
+
+#### Alembic Library
+[Alembic Documentation](https://alembic.sqlalchemy.org/en/latest/index.html)
+
+##### Alembic Setup
+<pre><code># pip install alembic
+# alembic init [alembic_dir]</code></pre>
