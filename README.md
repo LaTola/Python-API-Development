@@ -39,3 +39,11 @@ https://docs.sqlalchemy.org/en/20/
 ##### Alembic Setup
 <pre><code># pip install alembic
 # alembic init [alembic_dir]</code></pre>
+
+### Heroku
+Create Procfile with below content:
+<pre><code>web: uvicorn app.main:app --host=0.0.0.0 --port=${PORT:-5000}</code></pre>
+Create app
+<pre><code># heroku create [app-name]</code></pre>
+Install postgresql add-on
+<pre><code># heroku addons:create heroku-postgresql:mini</code></pre>
