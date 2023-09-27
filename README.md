@@ -47,3 +47,15 @@ Create app
 <pre><code># heroku create [app-name]</code></pre>
 Install postgresql add-on
 <pre><code># heroku addons:create heroku-postgresql:mini</code></pre>
+Set .env vars into heroku environment
+
+Push app to heroku
+<pre><code># git push heroku main</code></pre>
+Create pgsql schema
+<pre><code># heroku run "alembic upgrade head"</code></pre>
+Restart app
+<pre><code># heroku ps:restart</code></pre>
+Check heroku logs
+<pre><code># heroku logs -t</code></pre>
+
+> **_NOTE:_** Update postman prod environment with new API URL every time the app is redeployed
