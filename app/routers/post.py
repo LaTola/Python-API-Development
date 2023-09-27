@@ -84,7 +84,7 @@ async def create_post(post: schemas.CreatePost, db: Session = Depends(get_db), u
     Returns:
         str: el nuevo registro
     """
-    new_post = models.Post(author_id=user.id, **post.model_dump())
+    new_post = models.Post(owner_id=user.id, **post.model_dump())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -110,7 +110,7 @@ async def delete_post(id: str, db: Session = Depends(get_db), user=Depends(oauth
     """
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if post:
-        if post.author_id != user.id:
+        if post.owner_id != user.id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
         db.delete(post)
@@ -144,7 +144,7 @@ async def update_post(id: str, updated_post: schemas.CreatePost, db: Session = D
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f'id {id} not found')
 
-    if post_query.author_id != user.id:
+    if post_query.owner_id != user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
 
