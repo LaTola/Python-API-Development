@@ -62,3 +62,6 @@ Check heroku logs
 <pre><code># heroku logs -t</code></pre>
 
 > **_NOTE:_** Update postman prod environment with new API URL every time the app is redeployed
+
+#### Useful resources
+[CertBot free ssl certificates](https://certbot.eff.org/)
