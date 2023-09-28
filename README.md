@@ -40,6 +40,9 @@ https://docs.sqlalchemy.org/en/20/
 <pre><code># pip install alembic
 # alembic init [alembic_dir]</code></pre>
 
+#### gunicorn command
+<pre><code># gunicorn -w 4 uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000</code></pre>
+
 ### Heroku
 Create Procfile with below content:
 <pre><code>web: uvicorn app.main:app --host=0.0.0.0 --port=${PORT:-5000}</code></pre>
