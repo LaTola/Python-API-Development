@@ -1,0 +1,13 @@
+[unit]
+Description=gunicorn instance to enable FastAPI service
+After=network.target
+
+[Service]
+User=fastapi
+Group=fastapi
+WorkingDirectory=/app/src
+Environment="PATH=/app/.venv/bin"
+ExecStart=/app/.venv/bin/gunicorn -w4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000
+
+[Install]
+WantedBy=multi-user.target
