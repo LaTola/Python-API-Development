@@ -1,4 +1,6 @@
 .env
+.pgenv
 __pycache__/
 .venv/
 .vscode/
+pgdata/
