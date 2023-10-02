@@ -41,7 +41,6 @@ def verify_access_token(token: str, credentials_exception) -> str:
 
     Raises:
         credentials_exception: Exception raised in case of wrong credentials
-        credentials_exception: Exception raised in case of wrong credentials
 
     Returns:
         TokenData: Decrypted token data
