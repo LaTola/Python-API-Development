@@ -50,8 +50,4 @@ async def vote(vote: schemas.Vote, db: Session = Depends(get_db), user=Depends(o
         db.commit()
         return {"message": f"User with id {user.id} has removed vote from post {vote.post_id} successfully"}
 
-
-@router.get("/", response_model=List[schemas.ResponsePost])
-async def get_votes(db: Session = Depends(get_db), user=Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    pass
 # endregion
