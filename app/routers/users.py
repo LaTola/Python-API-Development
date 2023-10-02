@@ -2,6 +2,7 @@ from .. import models, schemas, utils, oauth2
 from ..database import get_db
 from sqlalchemy.orm import Session
 from fastapi import status, HTTPException, Depends, APIRouter
+from fastapi.exceptions import ResponseValidationError
 
 
 router = APIRouter(prefix='/users', tags=['Users'])
@@ -9,23 +10,28 @@ router = APIRouter(prefix='/users', tags=['Users'])
 # region USERS POST
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
-async def create_user(user: schemas.User, db: Session = Depends(get_db)):#, logged_user=Depends(oauth2.get_current_user)):
+# , response_model=schemas.UserResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED)
+async def create_user(user: schemas.User, db: Session = Depends(get_db)):
     """
     Creates a new user
 
     Args:
         db (Session, optional): postgres db session. Defaults to Depends(get_db).
     """
-    user.password = utils.hash_password(user.password)
-    new_user = models.User(**user.model_dump())
-    try:
+
+    user_exists = db.query(models.User).filter(
+        models.User.email == user.email).first()
+    if user_exists is None:
+        new_user = models.User(**user.model_dump())
+        new_user.password = utils.hash_password(user.password)
         db.add(new_user)
         db.commit()
-    except Exception as e:
-        return e
-    db.refresh(new_user)
-    return new_user
+        db.refresh(new_user)
+        return new_user
+    else:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail=f'User with email {user.email} already exists')
 
 
 @router.get('/{id}', response_model=schemas.UserResponse)
