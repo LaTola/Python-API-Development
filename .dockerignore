@@ -1,4 +1,3 @@
-.env
 .pgenv
 __pycache__/
 .venv/
