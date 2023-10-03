@@ -2,7 +2,6 @@ from .. import models, schemas, utils, oauth2
 from ..database import get_db
 from sqlalchemy.orm import Session
 from fastapi import status, HTTPException, Depends, APIRouter
-from fastapi.exceptions import ResponseValidationError
 
 
 router = APIRouter(prefix='/users', tags=['Users'])
