@@ -1,0 +1,29 @@
+# PROD compose file
+version: "3.8"
+services:
+  fastapi:
+    image: wiglesias/fastapi-course
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - ./.env
+    ports: 
+      - 8000:8000
+  
+  postgres:
+    image: postgres:15.4-alpine
+    env_file:
+      - ./.pgenv
+    ports: 
+      - 5432:5432
+    volumes: 
+      - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
