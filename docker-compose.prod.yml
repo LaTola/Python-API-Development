@@ -1,8 +1,8 @@
-# DEV compose file
+# PROD compose file
 version: "3.8"
 services:
   fastapi:
-    build: .
+    image: wiglesias/fastapi-course
     depends_on:
       postgres:
         condition: service_healthy
