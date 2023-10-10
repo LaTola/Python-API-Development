@@ -1,5 +1,5 @@
 
-#### Project step by step course 
+#### Project step by step course
 [Python API Development - Comprehensive Course for Begginners](https://www.youtube.com/watch?v=0sOvCWFmrtA)
 
 #### API docs URL
@@ -22,12 +22,12 @@ https://docs.sqlalchemy.org/en/20/
 
 #### C.R.U.D.
 
- - **C** reate     
+ - **C** reate
 <pre>     POST        /post       @app.post("/post")</pre>
  - **R** ead
 <pre>     GET         /post/:id   @app.get("/post/{id}")
      GET         /post       @app.get("/post")</pre>
-- **U** pdate     
+- **U** pdate
 <pre>     PUT/PATCH   /post/:id   @app.put("/post/{id}")</pre>
 - **D** elete
 <pre>     DELETE      /post/:id   @app.delete("/post/{id}")</pre>

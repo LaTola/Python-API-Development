@@ -1,7 +1,7 @@
 """create posts table
 
 Revision ID: dfb072c306ab
-Revises: 
+Revises:
 Create Date: 2023-09-26 17:30:37.250573
 
 """

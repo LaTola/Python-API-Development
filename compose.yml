@@ -8,16 +8,16 @@ services:
         condition: service_healthy
     env_file:
       - ./.env
-    ports: 
+    ports:
       - 8000:8000
-  
+
   postgres:
     image: postgres:15.4-alpine
     env_file:
       - ./.pgenv
-    ports: 
+    ports:
       - 5432:5432
-    volumes: 
+    volumes:
       - ./pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]

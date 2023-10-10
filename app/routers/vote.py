@@ -16,7 +16,7 @@ async def vote(vote: schemas.Vote, db: Session = Depends(get_db), user=Depends(o
     Vote post functionality
 
     Args:
-        vote (schemas.Vote): The vote 
+        vote (schemas.Vote): The vote
         db (Session, optional): db pgsql session. Defaults to Depends(get_db).
         user (_type_, optional): the vote user (get by request or from session in key). Defaults to Depends(oauth2.get_current_user).
 
