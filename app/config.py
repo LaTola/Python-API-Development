@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     oauth_token_expire: int
 
     class Config:
-        env_file = "/.env"
+        env_file = '/.env'
 
 
 settings = Settings()

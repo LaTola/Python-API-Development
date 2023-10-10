@@ -5,13 +5,13 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 
-router = APIRouter(prefix="/posts", tags=['Posts'])
+router = APIRouter(prefix='/posts', tags=['Posts'])
 
 # region POSTS GET
 
 
-@router.get("/", response_model=List[schemas.PostOut])
-async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_user), limit: int = 50, skip: int = 0, search: Optional[str] = ""):
+@router.get('/', response_model=List[schemas.PostOut])
+async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_user), limit: int = 50, skip: int = 0, search: Optional[str] = ''):
     """
     API posts route
 
@@ -20,7 +20,7 @@ async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_u
 
     Example: {{URL}}/posts?limit=10&skip=0&search=<text>
     """
-    posts = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+    posts = db.query(models.Post, func.count(models.Vote.post_id).label('likes')).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
         models.Post.id).order_by(models.Post.id).filter(func.lower(models.Post.title).contains(
             func.lower(search))).limit(limit).offset(skip).all()
@@ -28,7 +28,7 @@ async def posts(db: Session = Depends(get_db), user=Depends(oauth2.get_current_u
     return posts
 
 
-@router.get("/{id}", response_model=schemas.PostOut)
+@router.get('/{id}', response_model=schemas.PostOut)
 async def get_post(id: int, db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     Get's an item by id
@@ -39,7 +39,7 @@ async def get_post(id: int, db: Session = Depends(get_db), user=Depends(oauth2.g
     Returns:
         str: the id of the Item (primary key)
     """
-    post = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+    post = db.query(models.Post, func.count(models.Vote.post_id).label('likes')).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
         models.Post.id).filter(models.Post.id == id).first()
     if not post:
@@ -49,7 +49,7 @@ async def get_post(id: int, db: Session = Depends(get_db), user=Depends(oauth2.g
     return post
 
 
-@router.get("/latest/", response_model=schemas.PostOut)
+@router.get('/latest/', response_model=schemas.PostOut)
 async def get_latest(db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     Returns last item added
@@ -59,7 +59,7 @@ async def get_latest(db: Session = Depends(get_db), user=Depends(oauth2.get_curr
 
     Comments: Added slash at the end to avoid route conflict with get_post
     """
-    post = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+    post = db.query(models.Post, func.count(models.Vote.post_id).label('likes')).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(
         models.Post.id).order_by(models.Post.id.desc()).first()
     if not post:
@@ -73,7 +73,7 @@ async def get_latest(db: Session = Depends(get_db), user=Depends(oauth2.get_curr
 # region POSTS POST
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.ResponsePost)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.ResponsePost)
 async def create_post(post: schemas.CreatePost, db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     post con un JSON y diferentes parametros
@@ -94,7 +94,7 @@ async def create_post(post: schemas.CreatePost, db: Session = Depends(get_db), u
 # region POSTS DELETE
 
 
-@router.delete("/{id}")
+@router.delete('/{id}')
 async def delete_post(id: str, db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     delete an item
@@ -112,7 +112,7 @@ async def delete_post(id: str, db: Session = Depends(get_db), user=Depends(oauth
     if post:
         if post.owner_id != user.id:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
+                status_code=status.HTTP_403_FORBIDDEN, detail='Not authorized to perform requested action')
         db.delete(post)
         db.commit()
         return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -124,7 +124,7 @@ async def delete_post(id: str, db: Session = Depends(get_db), user=Depends(oauth
 # region POSTS PUT
 
 
-@router.put("/{id}", response_model=schemas.ResponsePost)
+@router.put('/{id}', response_model=schemas.ResponsePost)
 async def update_post(id: str, updated_post: schemas.CreatePost, db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     Updates a post given a post id
@@ -146,7 +146,7 @@ async def update_post(id: str, updated_post: schemas.CreatePost, db: Session = D
 
     if post_query.owner_id != user.id:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
+            status_code=status.HTTP_403_FORBIDDEN, detail='Not authorized to perform requested action')
 
     # A different approach
     post_query.title = updated_post.title

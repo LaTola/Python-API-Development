@@ -5,12 +5,12 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 
-router = APIRouter(prefix="/vote", tags=['vote'])
+router = APIRouter(prefix='/vote', tags=['vote'])
 
 # region VOTES GET
 
 
-@router.post("/", status_code=status.HTTP_200_OK)
+@router.post('/', status_code=status.HTTP_200_OK)
 async def vote(vote: schemas.Vote, db: Session = Depends(get_db), user=Depends(oauth2.get_current_user)):
     """
     Vote post functionality
@@ -44,10 +44,10 @@ async def vote(vote: schemas.Vote, db: Session = Depends(get_db), user=Depends(o
         new_vote = models.Vote(post_id=vote.post_id, user_id=user.id)
         db.add(new_vote)
         db.commit()
-        return {"message": f"User with id {user.id} has voted post {vote.post_id} successfully"}
+        return {'message': f'User with id {user.id} has voted post {vote.post_id} successfully'}
     else:
         db.delete(vote_record)
         db.commit()
-        return {"message": f"User with id {user.id} has removed vote from post {vote.post_id} successfully"}
+        return {'message': f'User with id {user.id} has removed vote from post {vote.post_id} successfully'}
 
 # endregion
